@@ -39,11 +39,29 @@ print("Hello world")
 
 You can create comments, or sections of text that will not be executed as code, by adding a '#' in front of the section.
 
-## Loading libraries and importing data
+## Loading packages and importing data
 
-Different libraries in R do different things. There's a library that helps you  
+Different packages in R do different things. There's a package that helps you plot pretty things called **ggplot**, a package that contains a bunch of useful functions for data transformation and analysis called **dplyr**, and even a fortune teller package. We'll be installing the first two with the following lines of code:
 
+```{r}
+install.packages("dplyr")
+install.packages("ggplot2")
+```
 
+Once you've installed them, you need to *load* them before use. Every time you restart R, it forgets about your previous session. You can load packages like so:
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+We will be working with a publicly available dataset from the CDC called "COVID-19 Case Surveillance Public Use Data".
+
+Once you have it downloaded, make sure it is in the same folder as the RMarkdown document you have with code. You can read in a CSV file like so:
+
+```{r}
+
+```
 
 ## Exploratory analysis & descriptive stats
 
