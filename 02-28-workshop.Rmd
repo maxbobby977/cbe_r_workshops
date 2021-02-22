@@ -47,6 +47,23 @@ Different libraries in R do different things. There's a library that helps you
 
 ## Exploratory analysis & descriptive stats
 
+First, lets load in some data. We can do this using a function called read.csv("FILENAME.csv")
+```{r}
+vaccine_data = read.csv("vaccine_data.csv")
+```
+
+We can use the summary function to immediately display a number of summary statistics.
+
+```{r}
+summary(vaccine_data)
+```
+
+Let's say we want to take a peek at our spreadsheet, but we we're not feeling numbers today. We can use the view function to see the data right in RStudio. 
+
+```{r}
+View(vaccine_data)
+```
+
 Summary
 View
 glimpse
