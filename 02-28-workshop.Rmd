@@ -1,0 +1,98 @@
+---
+title: "CBE R Workshop"
+author: "Max & Evelyn"
+date: "2/21/2021"
+output:
+  rmarkdown::html_document:
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro to R and RMarkdown
+
+This is what a code chunk is:
+
+```{r}
+print("hello world! :)")
+```
+
+The code within the chunk, which is demarcated by three tick symbols (`), will be executed. You can add tinker with different options in the **chunk header**, which is enclosed by the two brackets (\{\}). One useful chunk option is *echo = FALSE*, which suppresses the code from showing and only produces an output.
+
+For example, if we add *echo = FALSE* to the above code chunk, we only get the printed output.
+
+```{r echo=FALSE}
+print("hello world! :)")
+```
+
+You can "knit" an RMarkdown by clicking the yarn icon, or by using the keyboard shortcut (there are a lot of these in RStudio): CTRL/CMD + SHIFT + K. This creates a prettier HTML output.
+
+You can save a document by going to File-> Save or with the shortcut CTRL/CMD + S.
+
+```{r}
+print("Hello world")
+
+# The above is a line of code. This is a comment.
+```
+
+You can create comments, or sections of text that will not be executed as code, by adding a '#' in front of the section.
+
+## Loading libraries and importing data
+
+Different libraries in R do different things. There's a library that helps you  
+
+
+
+## Exploratory analysis & descriptive stats
+
+Summary
+View
+glimpse
+variable types
+NA values
+
+
+
+
+
+## Data transformation with dplyr
+
+filter
+select
+mutate
+arrange
+summarise
+
+
+
+## Plotting with ggplot
+
+geom_bar
+geom_hist
+geom_point
+scatter
+boxplot
+facet_wrap
+titles / labels
+themes
+
+
+scale_coord_flip
+geom_hline
+
+## Other R applications
+
+You can do so much more with R, including but not limited to mapping / GIS stuff!!! And making a website! And election predictions, and COVID dashboards (link it), and ML
+
+Other resources - R Primer
+
+
+
+
+
+
+
+
+
