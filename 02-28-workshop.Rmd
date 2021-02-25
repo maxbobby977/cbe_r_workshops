@@ -1,7 +1,6 @@
 ---
 title: "CBE R Workshop"
 author: "Max & Evelyn"
-date: "2/21/2021"
 output:
   rmarkdown::html_document:
     theme: united
@@ -11,7 +10,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Intro to R and RMarkdown
+## {.tabset}
+
+### Intro to R and RMarkdown
 
 This is what a code chunk is:
 
@@ -39,30 +40,28 @@ print("Hello world")
 
 You can create comments, or sections of text that will not be executed as code, by adding a '#' in front of the section.
 
-## Loading packages and importing data
+### Loading packages and importing data
 
-Different packages in R do different things. There's a package that helps you plot pretty things called **ggplot**, a package that contains a bunch of useful functions for data transformation and analysis called **dplyr**, and even a fortune teller package. We'll be installing the first two with the following lines of code:
-
-```{r}
-install.packages("dplyr")
-install.packages("ggplot2")
-```
-
-Once you've installed them, you need to *load* them before use. Every time you restart R, it forgets about your previous session. You can load packages like so:
+Different packages in R do different things. There's a package that helps you plot pretty things called **ggplot**, a package that contains a bunch of useful functions for data transformation and analysis called **dplyr**, and even a fortune teller package. There's even a package that contains the first two packages. We'll be installing this one.
 
 ```{r}
-library(dplyr)
-library(ggplot2)
+#install.packages("tidyverse")
 ```
 
-## Exploratory analysis & descriptive stats
+Once you've installed it, you need to *load* the package before use. Every time you restart R, it forgets about your previous session. You can load packages like so:
 
-We will be working with a publicly available dataset from the CDC called "COVID-19 Case Surveillance Public Use Data".
+```{r}
+library(tidyverse)
+```
+
+### Exploratory data analysis
+
+We will be working with a publicly available dataset from Our World in Data called "Coronavirus (COVID-19) Vaccinations".
 
 Once you have it downloaded, make sure it is in the same folder as the RMarkdown document you have with code. You can read in a CSV file using a function called read.csv("FILENAME.csv")
 
 ```{r}
-vaccine_data = read.csv("vaccine_data.csv")
+vaccine_data <- read_csv("vaccine_data.csv")
 ```
 
 We can use the summary function to immediately display a number of summary statistics.
@@ -73,7 +72,7 @@ summary(vaccine_data)
 
 Let's say we want to take a peek at our spreadsheet, but we we're not feeling numbers today. We can use the view function to see the data right in RStudio. 
 
-```{r}
+```{r eval=FALSE}
 View(vaccine_data)
 ```
 
@@ -85,9 +84,7 @@ NA values
 
 You can think of variables and columns as synonymous in a data table.
 
-
-
-## Data transformation with dplyr
+### Data transformation with dplyr
 
 Now that we've checked our data for any loose ends, like NA values, let's get to manipulating the data. The **dplyr** package contains various functions that help you transform variables.
 
@@ -155,7 +152,8 @@ There's so much more you can do with **dplyr**. Another useful function is *grou
 ```{r}
 vaccine_data %>%
   select(date, people_fully_vaccinated, location) %>%
-  filter(!is.na(people_fully_vaccinated)) %>%
+  filter(!is.na(people_fully_vaccinated),
+         location != "United States") %>%
   group_by(date) %>%
   summarize(mean(people_fully_vaccinated))
 
@@ -163,28 +161,101 @@ vaccine_data %>%
 ```
 
 
+### Plotting with ggplot
+
+When you have a good grasp of your findings, you might want to visualize those results. The **ggplot2* package has a robust collection of functions and themes to do this in the PRETTIEST manner possible.
+
+We won't go over examples of each, but here's a cheat sheet of what each function does:
+* `geom_bar()` creates a bar plot, which is good for graphing categorical variables.
+* `geom_hist()` creates a histogram.
+* `geom_point()` creates a scatter plot, good for continuous (or numerical) variables.
+* `geom_boxplot()` creates a boxplot, good for looking at central tendency and distribution.
+* `geom_line()` creates a line graph, good for continuous variables.
+
+Let's say we want to see how vaccinations per capita have progressed over time in the state of Massachusetts.
+
+```{r include=FALSE}
+# We need to first prepare our data by filtering for Massachusetts only and
+# selecting the variable people_vaccinated_per_hundred.
+
+massonly <- vaccine_data %>%
+  filter(location == "Massachusetts",
+         !is.na(people_vaccinated_per_hundred)) %>%
+  mutate(date = as.Date(date))
+
+# By using the "<-" assignment arrow, we've stored the changes we made to the
+# dataset in a new object called massonly.
+```
+
+```{r}
+# First, we need to start with ggplot().
+ggplot(data = massonly) +
+  # Note how we're using plus signs instead of the %>% operator! This is only
+  # for when using the ggplot2 package.
+  geom_point(mapping = aes(x = date, y = people_vaccinated_per_hundred))
+```
+
+You can replace `geom_point()` with `geom_line()`. It's that easy to create plots using **ggplot2**.
+
+```{r}
+# Run it back
+ggplot(data = massonly) +
+  geom_line(mapping = aes(x = date, y = people_vaccinated_per_hundred))
+```
+
+Now that this is looking more sensible, we can add labels using the `labs()` function. You can use `xlab()` and `ylab()` to change the axis titles.
+
+```{r}
+# Make it make sense
+ggplot(data = massonly) +
+  geom_line(mapping = aes(x = date, y = people_vaccinated_per_hundred)) +
+  labs(title = "Vaccination Progress in MA",
+       subtitle = "Vaccination has picked up since mid-January",
+       caption = "Source: Our World in Data") +
+  xlab("Date") +
+  ylab("People vaccinated per hundred")
+```
+
+You can even make it look pretty with a variety of themes.
+
+```{r}
+ggplot(data = massonly) +
+  geom_line(mapping = aes(x = date, y = people_vaccinated_per_hundred)) +
+  labs(title = "Vaccination Progress in MA",
+       subtitle = "The progress has been fairly linear since mid-January",
+       caption = "Source: Center for Disease Control") +
+  xlab("Date") +
+  ylab("People vaccinated per hundred") +
+  # Simply add a theme.
+  theme_light()
+```
+
+We won't go too in depth, but the world is your oyster when it comes to visualizing with R. Below is a neat graph that Max and I created using this dataset. Can you replicate it?
+
+```{r echo=FALSE}
+dat <- vaccine_data %>%
+  filter(location %in% c("Texas", "New York State"),
+         !is.na(total_distributed),
+         !is.na(total_vaccinations)) %>%
+  group_by(date, location) %>%
+  mutate(rate = total_vaccinations / total_distributed,
+         date = as.Date(date))
+
+ggplot(data = dat, mapping = aes(x = date, y = rate, color = location)) +
+  geom_line() +
+  xlab("Date") +
+  ylab("Rate") +
+  labs(title = "Vaccination-distribution rate in NY & TX",
+       caption = "Source: Our World in Data") +
+  theme_minimal()
+```
 
 
-## Plotting with ggplot
+### Other R applications
 
-geom_bar
-geom_hist
-geom_point
-scatter
-boxplot
-facet_wrap
-titles / labels
-themes
+You can do so much more with R, including but not limited to mapping / GIS stuff!!! And making a website! And election predictions, and [COVID dashboards](https://blog.rstudio.com/2020/11/19/using-shiny-in-production-to-monitor-covid-19/), and machine learning.
 
-
-scale_coord_flip
-geom_hline
-
-## Other R applications
-
-You can do so much more with R, including but not limited to mapping / GIS stuff!!! And making a website! And election predictions, and COVID dashboards (link it), and ML
-
-Other resources - R Primer
+If you want to learn more, I highly recommend the [R primers](https://rstudio.cloud/learn/primers) created by RStudio.
 
 
 
