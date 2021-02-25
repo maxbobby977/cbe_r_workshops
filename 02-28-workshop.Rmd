@@ -55,17 +55,12 @@ library(dplyr)
 library(ggplot2)
 ```
 
-We will be working with a publicly available dataset from the CDC called "COVID-19 Case Surveillance Public Use Data".
-
-Once you have it downloaded, make sure it is in the same folder as the RMarkdown document you have with code. You can read in a CSV file like so:
-
-```{r}
-
-```
-
 ## Exploratory analysis & descriptive stats
 
-First, lets load in some data. We can do this using a function called read.csv("FILENAME.csv")
+We will be working with a publicly available dataset from the CDC called "COVID-19 Case Surveillance Public Use Data".
+
+Once you have it downloaded, make sure it is in the same folder as the RMarkdown document you have with code. You can read in a CSV file using a function called read.csv("FILENAME.csv")
+
 ```{r}
 vaccine_data = read.csv("vaccine_data.csv")
 ```
@@ -85,20 +80,88 @@ View(vaccine_data)
 Summary
 View
 glimpse
-variable types
+variables and variable types
 NA values
 
-
+You can think of variables and columns as synonymous in a data table.
 
 
 
 ## Data transformation with dplyr
 
-filter
-select
-mutate
-arrange
-summarise
+Now that we've checked our data for any loose ends, like NA values, let's get to manipulating the data. The **dplyr** package contains various functions that help you transform variables.
+
+Here is a quick list of what the most common functions do:
+* `filter()` - subsets your data by certain values
+* `select()` - selects or deselects certain variables
+* `arrange()` - sorts your data in descending or ascending value
+* `summarize()` - calculates an output that is a single value
+* `mutate()` - creates new columns
+
+Let's say we're only interested in viewing the observations from February 21, 2021.
+
+```{r}
+vaccine_data %>%
+  filter(date == "2021-02-21")
+```
+
+Now you can see there are only 65 observations that match this condition.
+
+We only want the variable `people_fully_vaccinated`.
+
+```{r}
+vaccine_data %>%
+  select(people_fully_vaccinated)
+```
+
+What if we want all variables *besides* `people_fully_vaccinated`?
+
+```{r}
+vaccine_data %>%
+  select(-people_fully_vaccinated)
+```
+
+Now let's see which state has the highest number of `people_fully_vaccinated` as of February 21, 2021.
+
+```{r}
+vaccine_data %>%
+  filter(date == "2021-02-21") %>%
+  arrange(desc(people_fully_vaccinated))
+```
+
+`summarize()` is a useful function for basic statistics, like `mean()`, `median()`, or `sum()`. 
+
+```{r}
+vaccine_data %>%
+  filter(date == "2021-02-21",
+         location != "United States",
+         !is.na(people_fully_vaccinated)) %>%
+  summarize(mean(people_fully_vaccinated))
+```
+
+However, `mutate()` is useful for calculating a unique value per observation. Let's say we want to find the rate of vaccinations and distributions:
+
+```{r}
+vaccine_data %>%
+  filter(!is.na(people_vaccinated),
+         !is.na(total_distributed)) %>%
+  mutate(newvariable = people_vaccinated / total_distributed)
+```
+
+There's so much more you can do with **dplyr**. Another useful function is *group_by()*, which creates groups based on a certain variable. For example, finding the mean number of people fully vaccinated isn't very helpful when your data contains observations from New York in December 2020 and Oregon in February 2021.
+
+*group_by()* essentially sidesteps this problem of comparison by calculating statistics within a given group.
+
+```{r}
+vaccine_data %>%
+  select(date, people_fully_vaccinated, location) %>%
+  filter(!is.na(people_fully_vaccinated)) %>%
+  group_by(date) %>%
+  summarize(mean(people_fully_vaccinated))
+
+# Always gut check your results!
+```
+
 
 
 
