@@ -76,11 +76,25 @@ Let's say we want to take a peek at our spreadsheet, but we we're not feeling nu
 View(vaccine_data)
 ```
 
-Summary
-View
-glimpse
-variables and variable types
-NA values
+Glimpse is alternative way to view part of the data in R (note that this requires the TidyVerse library to be loaded).
+
+```{r}
+glimpse(vaccine_data)
+```
+
+You might notice symbols like <chr> and <dbl> in the above output. These are known as variable types in R. If you have learned another programming language, you might remember that you cannot add a number to a word (oftentimes this will result in *undefined behavior*), and the same is true in R. In the case of the above output <chr> stands for character, which is functionally the same as a word. You can recognize a character data type because characters are always surrounded by quotation marks. Doubles, or numerics as they are known in R, are essentially numbers. In some programming languages, integers (whole numbers), and doubles (decimal numbers) are considered as different datatypes — there is no such distinction in R. 
+
+You might notice that some values that were printed out above said "NA" instead of a number (or a character). This often means that despite there being other values associated with a particular data entry, there was no particular value recorded for that specific part of the data entry. It would be wasteful to remove the rest of the data associated with the entry (as it could be useful for other applications), but at the same time NA values can make certain calculations difficult. For example, if we were to sum all of the daily vaccinations without any manipulation of the data, the end result is an NA value, which is completely useless. 
+
+```{r}
+sum(vaccine_data$daily_vaccinations)
+```
+
+One of the simplest ways to deal with NA values is to use the `na.omit` command, which omits any NA values from a dataset. This resolves the issue we saw above.
+
+```{r}
+sum(na.omit(vaccine_data$daily_vaccinations))
+```
 
 You can think of variables and columns as synonymous in a data table.
 
