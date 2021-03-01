@@ -40,7 +40,7 @@ print("Hello world")
 
 You can create comments, or sections of text that will not be executed as code, by adding a '#' in front of the section.
 
-### Loading packages and importing data
+### Loading packages
 
 Different packages in R do different things. There's a package that helps you plot pretty things called **ggplot**, a package that contains a bunch of useful functions for data transformation and analysis called **dplyr**, and even a fortune teller package. There's even a package that contains the first two packages. We'll be installing this one.
 
