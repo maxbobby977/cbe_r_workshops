@@ -1,5 +1,5 @@
 ---
-title: "Worksheet"
+title: "R Worksheet"
 author: "Evelyn Cai"
 output: html_document
 ---
@@ -7,4 +7,33 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+## Task 1: Setup
+
+Install and load the `janitor` R package. This package contains useful functions like `clean_names()` that help you tidy up messy data quickly. Then, read in the `vaccine_data.csv` file and run `clean_names()` on the dataset.
+
+## Task 2: Mathematical Operations
+
+Answer the following math questions (with the help of R):
+
+1. 45 plus 73 (using the plus sign)
+2. 892 divided by 4 (using the forward slash sign)
+3. 16 times 5 (using the asterisk sign)
+4. The square root of 92 (hint... use Google!)
+5. The natural log of 103 (hint... use Google!)
+
+## Task 3: Exploratory Data Analysis
+
+1. Find the total number of people vaccinated in the U.S. as of February 1st, 2021.
+
+2. Which state had the highest number of daily vaccinations as of February 10th, 2021?
+
+3. How many states had a share of doses used of more than 0.5 on January 19th, 2021?
+
+
+
+
+
+
+
 
